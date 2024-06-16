@@ -3,6 +3,7 @@ import { Cookies, Notify } from 'quasar';
 // data
 import defaultNurseOptions from '@/data/nurseDefault';
 import defaultTeamOptions from '@/data/teamDefault';
+import teamList from '@/data/teamList';
 
 export const useMainStore = defineStore('mainStore', {
   state: () => ({
@@ -11,6 +12,12 @@ export const useMainStore = defineStore('mainStore', {
     nurseOptions: [],
     teamOptions: [],
     teamNameColor: '',
+    // 編組名單
+    teamList: teamList,
+    charting: '',
+    m8: '',
+    // 是否前往顯示畫面
+    isDisplay: false,
   }),
   getters: {},
   actions: {
@@ -18,6 +25,7 @@ export const useMainStore = defineStore('mainStore', {
       this.nurseOptions = Cookies.get('nurse_options') || [];
       this.teamOptions = Cookies.get('team_options') || [];
       this.teamNameColor = Cookies.get('team_name_color') || '#fff';
+      // 編組名單從儲存的拿，沒有的話就用預設的
     },
     addDefaultNurseOptions() {
       this.nurseOptions = [];

@@ -18,6 +18,158 @@
       ></q-btn>
     </div>
     <q-separator> </q-separator>
+    <q-form class="form" @submit="mainStore.isDisplay = true">
+      <div class="row q-mt-md">
+        <div class="col-4">
+          <div class="title text-body1 text-bold">消防編組</div>
+        </div>
+        <div class="col-4">
+          <div class="title text-body1 text-bold">姓名</div>
+        </div>
+        <div class="col-4">
+          <div class="title text-body1 text-bold">待接</div>
+        </div>
+      </div>
+      <div
+        class="row q-mt-md"
+        v-for="team in mainStore.teamList"
+        :key="team.number"
+      >
+        <div class="row col-4 items-center justify-center">
+          <q-select
+            filled
+            v-model="team.team"
+            use-input
+            input-debounce="0"
+            label="選擇消防編組"
+            :options="teamOptions"
+            @filter="teamFilterFn"
+            option-label="name"
+            emit-value
+            :style="'width: 200px;'"
+            :rules="[(val) => !!val || '必填']"
+            hide-bottom-space
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  沒有搜尋結果
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div class="row col-4 items-center justify-center">
+          <div class="title text-body1 text-bold q-mr-md">
+            {{ team.number }}
+          </div>
+          <q-select
+            filled
+            v-model="team.name"
+            use-input
+            input-debounce="0"
+            label="選擇護理師"
+            :options="nurseOptions"
+            @filter="nurseFilterFn"
+            :style="'width: 200px;'"
+            :rules="[(val) => !!val || '必填']"
+            hide-bottom-space
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  沒有搜尋結果
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div class="row col-4 items-center justify-center">
+          <q-input
+            filled
+            v-model="team.backup"
+            type="number"
+            label="待接"
+            hide-bottom-space
+            :style="'width: 200px;'"
+          ></q-input>
+        </div>
+      </div>
+      <q-separator class="q-my-md"> </q-separator>
+      <!-- charting  -->
+      <div class="row q-mt-md">
+        <div class="col-4"></div>
+        <div class="row col-4 items-center justify-center">
+          <div class="title text-body1 text-bold q-mr-md">Charting</div>
+          <q-select
+            filled
+            v-model="mainStore.charting"
+            use-input
+            input-debounce="0"
+            label="選擇護理師"
+            :options="nurseOptions"
+            @filter="nurseFilterFn"
+            :style="'width: 200px;'"
+            :rules="[(val) => !!val || '必填']"
+            hide-bottom-space
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  沒有搜尋結果
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div class="col-4"></div>
+      </div>
+      <!-- m8 -->
+      <div class="row q-mt-md">
+        <div class="col-4"></div>
+        <div class="row col-4 items-center justify-center">
+          <div class="title text-body1 text-bold q-mr-md">M8</div>
+          <q-select
+            filled
+            v-model="mainStore.m8"
+            use-input
+            input-debounce="0"
+            label="選擇護理師"
+            :options="nurseOptions"
+            @filter="nurseFilterFn"
+            :style="'width: 200px;'"
+            :rules="[(val) => !!val || '必填']"
+            hide-bottom-space
+          >
+            <template v-slot:no-option>
+              <q-item>
+                <q-item-section class="text-grey">
+                  沒有搜尋結果
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
+        </div>
+        <div class="col-4"></div>
+      </div>
+      <!-- 下一步按鈕 -->
+      <div class="row justify-end">
+        <q-btn
+          class="text-body1 q-mt-md q-mr-md"
+          color="teal"
+          text-color="white"
+          label="顯示畫面(test)"
+          @click="mainStore.isDisplay = true"
+        ></q-btn>
+        <q-btn
+          class="text-body1 q-mt-md"
+          color="teal"
+          text-color="white"
+          label="顯示畫面"
+          type="submit"
+        ></q-btn>
+      </div>
+    </q-form>
   </div>
   <q-dialog ref="teamDialog" v-model="mainStore.isShowTeamDialog">
     <q-card class="q-dialog-plugin" style="width: 800px; max-width: 80vw">
@@ -223,6 +375,7 @@ import { ref } from 'vue';
 // store 相關
 import { useMainStore } from '@/store/mainStore';
 // data 相關
+
 const mainStore = useMainStore();
 
 const nurseInput = ref('');
@@ -238,9 +391,45 @@ const addDefaultTeamOptions = () => {
   teamInputName.value = '';
   teamInputColor.value = '';
 };
+const nurseOptions = ref(mainStore.nurseOptions);
+const nurseFilterFn = (val, update) => {
+  if (val === '') {
+    update(() => {
+      nurseOptions.value = mainStore.nurseOptions;
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val;
+    nurseOptions.value = mainStore.nurseOptions.filter(
+      (v) => v.indexOf(needle) > -1
+    );
+  });
+};
+
+const teamOptions = ref(mainStore.teamOptions);
+const teamFilterFn = (val, update) => {
+  if (val === '') {
+    update(() => {
+      teamOptions.value = mainStore.teamOptions;
+    });
+    return;
+  }
+
+  update(() => {
+    const needle = val;
+    teamOptions.value = mainStore.teamOptions.filter(
+      (v) => v.name.indexOf(needle) > -1
+    );
+  });
+};
 </script>
 
 <style lang="scss" scoped>
 .input-form {
+  .title {
+    min-width: 5rem;
+  }
 }
 </style>

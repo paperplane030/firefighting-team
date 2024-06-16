@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="inner">
-      <InputForm></InputForm>
+      <InputForm v-if="!mainStore.isDisplay"></InputForm>
     </div>
+    <Display v-if="mainStore.isDisplay"></Display>
   </div>
 </template>
 
 <script setup>
 import InputForm from './components/InputForm.vue';
+import Display from './components/Display.vue';
 // store 相關
 import { useMainStore } from '@/store/mainStore';
 
@@ -17,7 +19,8 @@ mainStore.pageInit();
 
 <style lang="scss" scoped>
 .inner {
-  width: 1200px;
+  width: 1080px;
+  max-width: 80vw;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.3);
