@@ -13,19 +13,26 @@ export const useMainStore = defineStore('mainStore', {
     teamOptions: [],
     teamNameColor: '',
     // 編組名單
-    teamList: teamList,
+    teamList: [],
     charting: '',
     m8: '',
     // 是否前往顯示畫面
     isDisplay: false,
+    // 顯示畫面文字大小
+    displayFontSize: 1.5,
   }),
-  getters: {},
+  getters: {
+    getFontString(state) {
+      return `--font-size: ${state.displayFontSize}rem`;
+    },
+  },
   actions: {
     pageInit() {
       this.nurseOptions = Cookies.get('nurse_options') || [];
       this.teamOptions = Cookies.get('team_options') || [];
       this.teamNameColor = Cookies.get('team_name_color') || '#fff';
       // 編組名單從儲存的拿，沒有的話就用預設的
+      this.teamList = Cookies.get('teamList') || teamList;
     },
     addDefaultNurseOptions() {
       this.nurseOptions = [];
@@ -78,6 +85,16 @@ export const useMainStore = defineStore('mainStore', {
     },
     setTeamNameColor() {
       Cookies.set('team_name_color', this.teamNameColor);
+    },
+    deleteTeamList(number) {
+      const team = this.teamList.find((item) => item.number === number);
+      team.name = '';
+      team.backup = '';
+      team.team = '';
+    },
+    submit() {
+      this.isDisplay = true;
+      Cookies.set('teamList', this.teamList);
     },
   },
 });

@@ -18,7 +18,7 @@
       ></q-btn>
     </div>
     <q-separator> </q-separator>
-    <q-form class="form" @submit="mainStore.isDisplay = true">
+    <q-form class="form" @submit="mainStore.submit">
       <div class="row q-mt-md">
         <div class="col-4">
           <div class="title text-body1 text-bold">消防編組</div>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div
-        class="row q-mt-md"
+        class="row q-mt-md items-center"
         v-for="team in mainStore.teamList"
         :key="team.number"
       >
@@ -47,7 +47,6 @@
             option-label="name"
             emit-value
             :style="'width: 200px;'"
-            :rules="[(val) => !!val || '必填']"
             hide-bottom-space
           >
             <template v-slot:no-option>
@@ -72,7 +71,6 @@
             :options="nurseOptions"
             @filter="nurseFilterFn"
             :style="'width: 200px;'"
-            :rules="[(val) => !!val || '必填']"
             hide-bottom-space
           >
             <template v-slot:no-option>
@@ -84,7 +82,7 @@
             </template>
           </q-select>
         </div>
-        <div class="row col-4 items-center justify-center">
+        <div class="row col-3 items-center justify-center">
           <q-input
             filled
             v-model="team.backup"
@@ -94,13 +92,20 @@
             :style="'width: 200px;'"
           ></q-input>
         </div>
+        <q-icon
+          name="delete"
+          class="del-btn"
+          color="negative"
+          @click="mainStore.deleteTeamList(team.number)"
+          :style="'font-size: 2em;cursor: pointer;'"
+        />
       </div>
       <q-separator class="q-my-md"> </q-separator>
-      <!-- charting  -->
+      <!-- 85  -->
       <div class="row q-mt-md">
         <div class="col-4"></div>
         <div class="row col-4 items-center justify-center">
-          <div class="title text-body1 text-bold q-mr-md">Charting</div>
+          <div class="title text-body1 text-bold q-mr-md">85</div>
           <q-select
             filled
             v-model="mainStore.charting"
@@ -110,7 +115,6 @@
             :options="nurseOptions"
             @filter="nurseFilterFn"
             :style="'width: 200px;'"
-            :rules="[(val) => !!val || '必填']"
             hide-bottom-space
           >
             <template v-slot:no-option>
@@ -138,7 +142,6 @@
             :options="nurseOptions"
             @filter="nurseFilterFn"
             :style="'width: 200px;'"
-            :rules="[(val) => !!val || '必填']"
             hide-bottom-space
           >
             <template v-slot:no-option>
@@ -154,13 +157,13 @@
       </div>
       <!-- 下一步按鈕 -->
       <div class="row justify-end">
-        <q-btn
+        <!-- <q-btn
           class="text-body1 q-mt-md q-mr-md"
           color="teal"
           text-color="white"
           label="顯示畫面(test)"
           @click="mainStore.isDisplay = true"
-        ></q-btn>
+        ></q-btn> -->
         <q-btn
           class="text-body1 q-mt-md"
           color="teal"
