@@ -6,14 +6,14 @@
         class="text-body2"
         color="primary"
         text-color="white"
-        label="編組設定"
+        label="編組名單設定"
         @click="mainStore.isShowTeamDialog = true"
       ></q-btn>
       <q-btn
         class="text-body2"
         color="accent"
         text-color="white"
-        label="護理師設定"
+        label="護理師名單設定"
         @click="mainStore.isShowNurseDialog = true"
       ></q-btn>
     </div>
