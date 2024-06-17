@@ -11,13 +11,27 @@
         >
           {{ team.team.name }}
         </div>
-        <div class="name col-6 text text-weight-bolder">
+        <div class="name col-4 text text-weight-bolder">
           <span class="number">
             {{ team.number }}
           </span>
           {{ team.name }}
         </div>
-        <div class="backup col-2 text text-weight-bolder">
+        <div
+          class="main col-3 text text-weight-bolder text-orange-10 row items-center justify-center"
+        >
+          <template v-if="team.case.length > 0">
+            <q-avatar
+              color="teal"
+              text-color="white"
+              size="md"
+              v-for="item in team.case"
+              :key="item"
+              >{{ item }}</q-avatar
+            >
+          </template>
+        </div>
+        <div class="backup col-2 text text-weight-bolder text-orange-10">
           <template v-if="team.backup">
             待接
             {{ team.backup }}
@@ -25,25 +39,19 @@
         </div>
       </div>
     </template>
-    <div
-      class="row row-data items-center q-pb-sm under"
-      v-if="mainStore.charting !== ''"
-    >
-      <div class="team col-3 text"></div>
-      <div class="name col-6 text text-weight-bolder">
+    <div class="row row-data justify-center items-center q-pb-sm under">
+      <div
+        class="name col-3 text text-weight-bolder"
+        v-if="mainStore.charting !== ''"
+      >
         <span class="number"> 85 </span> : {{ mainStore.charting }}
       </div>
-      <div class="col-3 text"></div>
-    </div>
-    <div
-      class="row row-data items-center q-pb-sm under"
-      v-if="mainStore.m8 !== ''"
-    >
-      <div class="team col-3 text"></div>
-      <div class="name col-6 text text-weight-bolder">
+      <div
+        class="name col-3 text text-weight-bolder"
+        v-if="mainStore.m8 !== ''"
+      >
         <span class="number"> M8 </span> : {{ mainStore.m8 }}
       </div>
-      <div class="col-3 text"></div>
     </div>
     <div class="btn-block row">
       <q-icon
@@ -97,6 +105,9 @@ const mainStore = useMainStore();
     .team {
       padding: 8px;
       border-radius: 5px;
+    }
+    .main {
+      gap: 12px;
     }
     .number {
       display: inline-block;

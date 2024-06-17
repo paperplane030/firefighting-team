@@ -1,7 +1,7 @@
 <template>
   <div class="input-form q-pa-md">
     <div class="text-h4 q-mb-md">輸入頁面</div>
-    <div class="setting-btn text-left q-gutter-md q-mb-md">
+    <div class="row setting-btn text-left q-gutter-md q-mb-md">
       <q-btn
         class="text-body2"
         color="primary"
@@ -16,18 +16,32 @@
         label="護理師名單設定"
         @click="mainStore.isShowNurseDialog = true"
       ></q-btn>
+      <div class="col"></div>
+      <q-btn
+        class="text-body2"
+        color="negative"
+        text-color="white"
+        label="全部清空"
+        @click="mainStore.resetTeamList"
+      ></q-btn>
     </div>
     <q-separator> </q-separator>
     <q-form class="form" @submit="mainStore.submit">
       <div class="row q-mt-md">
-        <div class="col-4">
+        <div class="col-3">
           <div class="title text-body1 text-bold">消防編組</div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
           <div class="title text-body1 text-bold">姓名</div>
         </div>
-        <div class="col-4">
+        <div class="col-3">
+          <div class="title text-body1 text-bold">case</div>
+        </div>
+        <div class="col-2">
           <div class="title text-body1 text-bold">待接</div>
+        </div>
+        <div class="col-1">
+          <div class="title text-body1 text-bold">清空</div>
         </div>
       </div>
       <div
@@ -35,7 +49,7 @@
         v-for="team in mainStore.teamList"
         :key="team.number"
       >
-        <div class="row col-4 items-center justify-center">
+        <div class="row col-3 items-center justify-center">
           <q-select
             filled
             v-model="team.team"
@@ -58,7 +72,7 @@
             </template>
           </q-select>
         </div>
-        <div class="row col-4 items-center justify-center">
+        <div class="row col-3 items-center justify-center no-wrap">
           <div class="title text-body1 text-bold q-mr-md">
             {{ team.number }}
           </div>
@@ -82,7 +96,41 @@
             </template>
           </q-select>
         </div>
-        <div class="row col-3 items-center justify-center">
+        <div
+          class="column col-3 justify-center items-center q-gutter-sm case-list"
+        >
+          <!-- <div class="row q-gutter-md">
+            <q-btn
+              v-for="caseItem in mainStore.caseList"
+              round
+              class="text-body2"
+              :label="caseItem"
+              size="sm"
+              @click="mainStore.selectCase(caseItem)"
+              color="teal-5"
+            >
+            </q-btn>
+          </div> -->
+          <q-btn
+            class="text-body2"
+            color="indigo-6"
+            push
+            no-caps
+            @click="mainStore.openCaseDialog(team.number)"
+            >選擇case</q-btn
+          >
+          <div class="cases q-gutter-sm" v-if="team.case.length > 0">
+            <q-avatar
+              color="teal"
+              text-color="white"
+              size="md"
+              v-for="item in team.case"
+              :key="item"
+              >{{ item }}</q-avatar
+            >
+          </div>
+        </div>
+        <div class="row col-2 items-center justify-center">
           <q-input
             filled
             v-model="team.backup"
@@ -92,19 +140,20 @@
             :style="'width: 200px;'"
           ></q-input>
         </div>
-        <q-icon
-          name="delete"
-          class="del-btn"
-          color="negative"
-          @click="mainStore.deleteTeamList(team.number)"
-          :style="'font-size: 2em;cursor: pointer;'"
-        />
+        <div class="col-1">
+          <q-icon
+            name="delete"
+            class="del-btn"
+            color="negative"
+            @click="mainStore.deleteTeamList(team.number)"
+            :style="'font-size: 2em;cursor: pointer;'"
+          />
+        </div>
       </div>
       <q-separator class="q-my-md"> </q-separator>
       <!-- 85  -->
-      <div class="row q-mt-md">
-        <div class="col-4"></div>
-        <div class="row col-4 items-center justify-center">
+      <div class="row justify-center q-mt-md">
+        <div class="row col-5 items-center justify-center">
           <div class="title text-body1 text-bold q-mr-md">85</div>
           <q-select
             filled
@@ -125,13 +174,15 @@
               </q-item>
             </template>
           </q-select>
+          <q-icon
+            name="delete"
+            class="del-btn q-ml-md"
+            color="negative"
+            @click="mainStore.delete85"
+            :style="'font-size: 2em;cursor: pointer;'"
+          />
         </div>
-        <div class="col-4"></div>
-      </div>
-      <!-- m8 -->
-      <div class="row q-mt-md">
-        <div class="col-4"></div>
-        <div class="row col-4 items-center justify-center">
+        <div class="row col-5 items-center justify-center">
           <div class="title text-body1 text-bold q-mr-md">M8</div>
           <q-select
             filled
@@ -152,8 +203,14 @@
               </q-item>
             </template>
           </q-select>
+          <q-icon
+            name="delete"
+            class="del-btn q-ml-md"
+            color="negative"
+            @click="mainStore.deleteM8"
+            :style="'font-size: 2em;cursor: pointer;'"
+          />
         </div>
-        <div class="col-4"></div>
       </div>
       <!-- 下一步按鈕 -->
       <div class="row justify-end">
@@ -368,6 +425,35 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <q-dialog ref="caseDialog" v-model="mainStore.isShowCaseDialog">
+    <q-card class="q-dialog-plugin">
+      <q-card-section class="q-pa-sm q-mb-md">
+        <div class="text-h6 text-center">
+          選擇
+          <span class="text-primary">{{ mainStore.selectedTeam.number }}</span>
+          的case
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div class="row q-gutter-md">
+          <q-btn
+            v-for="caseItem in mainStore.caseList"
+            round
+            class="text-body2"
+            :label="caseItem"
+            @click="mainStore.selectCase(caseItem)"
+            :color="
+              mainStore.selectedCase.includes(caseItem) ? 'grey-5' : 'teal-5'
+            "
+          >
+            <q-tooltip v-if="mainStore.checkCaseBelongToTeam(caseItem)">{{
+              mainStore.checkCaseBelongToTeam(caseItem).number
+            }}</q-tooltip>
+          </q-btn>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -432,7 +518,11 @@ const teamFilterFn = (val, update) => {
 <style lang="scss" scoped>
 .input-form {
   .title {
-    min-width: 5rem;
+    min-width: 3rem;
+  }
+  .form {
+    .case-list {
+    }
   }
 }
 </style>
