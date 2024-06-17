@@ -520,9 +520,5 @@ const teamFilterFn = (val, update) => {
   .title {
     min-width: 3rem;
   }
-  .form {
-    .case-list {
-    }
-  }
 }
 </style>

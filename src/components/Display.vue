@@ -24,7 +24,7 @@
             <q-avatar
               color="teal"
               text-color="white"
-              size="md"
+              size="xl"
               v-for="item in team.case"
               :key="item"
               >{{ item }}</q-avatar
