@@ -34,12 +34,26 @@ export const useMainStore = defineStore('mainStore', {
     m8: '',
     // 是否前往顯示畫面
     isDisplay: false,
-    // 顯示畫面文字大小
-    displayFontSize: 1.5,
+    // 顯示字體大小設定
+    isShowFontSetting: false,
+    // 顯示編組文字大小
+    displayTeamFontSize: 1.5,
+    // 顯示姓名大小
+    displayNameFontSize: 1.5,
+    // 顯示case大小
+    displayCaseFontSize: 2.5,
+    // 顯示待接大小
+    displayBackupFontSize: 1.5,
   }),
   getters: {
     getFontString(state) {
-      return `--font-size: ${state.displayFontSize}rem`;
+      return `--team-font-size: ${state.displayTeamFontSize}rem;
+      --name-font-size: ${state.displayNameFontSize}rem;
+      --case-font-size: ${state.displayCaseFontSize}rem;
+      --backup-font-size: ${state.displayBackupFontSize}rem;`;
+    },
+    getTeamFontString(state) {
+      return ``;
     },
   },
   actions: {
@@ -49,9 +63,17 @@ export const useMainStore = defineStore('mainStore', {
       this.teamNameColor = Cookies.get('team_name_color') || '#fff';
       this.charting = Cookies.get('charting') || '';
       this.m8 = Cookies.get('m8') || '';
+      // 已選擇過的 case
       this.selectedCase = Cookies.get('selected_case', this.selectedCase) || [];
       // 編組名單從儲存的拿，沒有的話就用預設的
       this.teamList = Cookies.get('teamList') || teamList;
+      // 字體大小
+      this.displayTeamFontSize =
+        Number(Cookies.get('displayTeamFontSize')) || 1.5;
+      this.displayNameFontSize =
+        Number(Cookies.get('displayNameFontSize')) || 1.5;
+      this.displayCaseFontSize =
+        Number(Cookies.get('displayCaseFontSize')) || 2.5;
     },
     addDefaultNurseOptions() {
       this.nurseOptions = [];
@@ -168,6 +190,11 @@ export const useMainStore = defineStore('mainStore', {
       Cookies.set('selected_case', this.selectedCase);
       Cookies.set('charting', this.charting);
       Cookies.set('m8', this.m8);
+    },
+    saveFont() {
+      Cookies.set('displayTeamFontSize', this.displayTeamFontSize);
+      Cookies.set('displayNameFontSize', this.displayNameFontSize);
+      Cookies.set('displayCaseFontSize', this.displayCaseFontSize);
     },
   },
 });

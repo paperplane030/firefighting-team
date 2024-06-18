@@ -5,8 +5,22 @@
         class="row row-data items-center q-pb-sm"
         v-if="team.name && team.team"
       >
+        <template v-if="mainStore.isShowFontSetting">
+          <div class="col-3 relative-position q-mb-lg">
+            <FireFightingTextSizeBtn></FireFightingTextSizeBtn>
+          </div>
+          <div class="col-4 relative-position q-mb-lg">
+            <NameTextSizeBtn></NameTextSizeBtn>
+          </div>
+          <div class="col-3 relative-position q-mb-lg">
+            <CaseTextSizeBtn></CaseTextSizeBtn>
+          </div>
+          <div class="col-2 relative-position q-mb-lg">
+            <BackupTextSizeBtn></BackupTextSizeBtn>
+          </div>
+        </template>
         <div
-          class="team col-3 text text-weight-bolder"
+          class="team col-3 text-weight-bolder"
           :style="`background-color: ${team.team.color};color: ${mainStore.teamNameColor};`"
         >
           {{ team.team.name }}
@@ -18,7 +32,7 @@
           {{ team.name }}
         </div>
         <div
-          class="main col-3 text text-weight-bolder text-orange-10 row items-center justify-center"
+          class="case col-3 text text-weight-bolder text-orange-10 row items-center justify-center"
         >
           <template v-if="team.case.length > 0">
             <q-avatar
@@ -41,16 +55,13 @@
     </template>
     <div class="row row-data justify-center items-center q-pb-sm under">
       <div
-        class="name col-3 text text-weight-bolder"
+        class="name text text-weight-bolder"
         v-if="mainStore.charting !== ''"
       >
-        <span class="number"> 85 </span> : {{ mainStore.charting }}
+        <span class="number"> 85 : </span>{{ mainStore.charting }}
       </div>
-      <div
-        class="name col-3 text text-weight-bolder"
-        v-if="mainStore.m8 !== ''"
-      >
-        <span class="number"> M8 </span> : {{ mainStore.m8 }}
+      <div class="name text text-weight-bolder" v-if="mainStore.m8 !== ''">
+        <span class="number"> M8 : </span>{{ mainStore.m8 }}
       </div>
     </div>
     <div class="btn-block row">
@@ -61,19 +72,10 @@
         @click="mainStore.isDisplay = false"
       />
       <q-icon
-        name="text_decrease"
-        class="back-btn cursor-pointer"
-        @click="mainStore.displayFontSize -= 0.2"
-      />
-      <q-icon
         name="text_fields"
         class="back-btn cursor-pointer"
-        @click="mainStore.displayFontSize = 1.5"
-      />
-      <q-icon
-        name="text_increase"
-        class="back-btn cursor-pointer"
-        @click="mainStore.displayFontSize += 0.2"
+        color="light-blue-10"
+        @click="mainStore.isShowFontSetting = !mainStore.isShowFontSetting"
       />
     </div>
   </div>
@@ -82,6 +84,10 @@
 <script setup lang="ts">
 // vue 相關
 // 元件 相關
+import FireFightingTextSizeBtn from './Display/FireFightingTextSizeBtn.vue';
+import NameTextSizeBtn from './Display/NameTextSizeBtn.vue';
+import CaseTextSizeBtn from './Display/CaseTextSizeBtn.vue';
+import BackupTextSizeBtn from './Display/BackupTextSizeBtn.vue';
 // lib 相關
 // store 相關
 import { useMainStore } from '@/store/mainStore';
@@ -91,13 +97,16 @@ const mainStore = useMainStore();
 
 <style lang="scss" scoped>
 .display {
-  --font-size: 1.5rem;
+  --team-font-size: 1.5rem;
+  --name-font-size: 1.5rem;
+  --case-font-size: 1.5rem;
+  --backup-font-size: 1.5rem;
   position: relative;
   background-color: rgba(255, 255, 255, 0.8);
   .row-data {
     border-bottom: 1px dashed #666;
     .text {
-      font-size: var(--font-size);
+      font-size: 1.5rem;
     }
     &.under {
       border-bottom: none;
@@ -105,11 +114,22 @@ const mainStore = useMainStore();
     .team {
       padding: 8px;
       border-radius: 5px;
+      font-size: var(--team-font-size);
     }
-    .main {
+    .name {
+      font-size: var(--name-font-size);
+    }
+    .case {
       gap: 12px;
+      .q-avatar {
+        font-size: var(--case-font-size) !important;
+      }
+    }
+    .backup {
+      font-size: var(--backup-font-size);
     }
     .number {
+      position: relative;
       display: inline-block;
       min-width: 5em;
     }
