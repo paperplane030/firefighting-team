@@ -28,6 +28,8 @@ export const useMainStore = defineStore('mainStore', {
     caseList: caseList,
     // 已選擇的 case
     selectedCase: [],
+    // 標記的 case
+    markedCase: [],
     // charting
     charting: '',
     // m8
@@ -65,6 +67,8 @@ export const useMainStore = defineStore('mainStore', {
       this.m8 = Cookies.get('m8') || '';
       // 已選擇過的 case
       this.selectedCase = Cookies.get('selected_case', this.selectedCase) || [];
+      // 標記的 case
+      this.markedCase = Cookies.get('markedCase', this.markedCase) || [];
       // 編組名單從儲存的拿，沒有的話就用預設的
       this.teamList = Cookies.get('teamList') || teamList;
       // 字體大小
@@ -195,6 +199,14 @@ export const useMainStore = defineStore('mainStore', {
       Cookies.set('displayTeamFontSize', this.displayTeamFontSize);
       Cookies.set('displayNameFontSize', this.displayNameFontSize);
       Cookies.set('displayCaseFontSize', this.displayCaseFontSize);
+    },
+    markCase(caseNum) {
+      if (this.markedCase.includes(caseNum)) {
+        this.markedCase = this.markedCase.filter((item) => item !== caseNum);
+      } else {
+        this.markedCase.push(caseNum);
+      }
+      Cookies.set('markedCase', this.markedCase);
     },
   },
 });

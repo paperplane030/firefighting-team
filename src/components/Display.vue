@@ -41,6 +41,9 @@
               size="xl"
               v-for="item in team.case"
               :key="item"
+              class="cursor-pointer"
+              :class="mainStore.markedCase.includes(item) ? 'marked' : ''"
+              @click="mainStore.markCase(item)"
               >{{ item }}</q-avatar
             >
           </template>
@@ -123,6 +126,21 @@ const mainStore = useMainStore();
       gap: 12px;
       .q-avatar {
         font-size: var(--case-font-size) !important;
+        user-select: none;
+        &.marked {
+          position: relative;
+          &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            right: 0;
+            bottom: -5px;
+            transform: translateX(-50%);
+            width: 80%;
+            border-bottom: 2px solid $dark;
+          }
+        }
       }
     }
     .backup {
