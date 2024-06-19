@@ -1,38 +1,38 @@
 <template>
-  <div class="case-text-size-btn">
-    <q-btn
+  <div class="case-text-size-btn q-gutter-md">
+    <q-icon
       flat
       size="md"
-      color="transparent"
-      text-color="dark"
-      icon="text_decrease"
+      color="dark"
+      name="text_decrease"
+      class="cursor-pointer"
       @click="
         mainStore.displayCaseFontSize -= 0.2;
         mainStore.saveFont;
       "
-    ></q-btn>
-    <q-btn
+    ></q-icon>
+    <q-icon
       flat
       size="md"
-      color="transparent"
-      text-color="dark"
-      icon="text_fields"
+      color="dark"
+      name="text_fields"
+      class="cursor-pointer"
       @click="
         mainStore.displayCaseFontSize = 1.5;
         mainStore.saveFont;
       "
-    ></q-btn>
-    <q-btn
+    ></q-icon>
+    <q-icon
       flat
       size="md"
-      color="transparent"
-      text-color="dark"
-      icon="text_increase"
+      color="dark"
+      name="text_increase"
+      class="cursor-pointer"
       @click="
         mainStore.displayCaseFontSize += 0.2;
         mainStore.saveFont;
       "
-    ></q-btn>
+    ></q-icon>
   </div>
 </template>
 

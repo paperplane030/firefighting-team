@@ -1,24 +1,26 @@
 <template>
   <div class="display q-gutter-sm" :style="mainStore.getFontString">
+    <div class="row">
+      <template v-if="mainStore.isShowFontSetting">
+        <div class="col-3 relative-position q-mb-lg">
+          <FireFightingTextSizeBtn></FireFightingTextSizeBtn>
+        </div>
+        <div class="col-4 relative-position q-mb-lg">
+          <NameTextSizeBtn></NameTextSizeBtn>
+        </div>
+        <div class="col-3 relative-position q-mb-lg">
+          <CaseTextSizeBtn></CaseTextSizeBtn>
+        </div>
+        <div class="col-2 relative-position q-mb-lg">
+          <BackupTextSizeBtn></BackupTextSizeBtn>
+        </div>
+      </template>
+    </div>
     <template v-for="team in mainStore.teamList" :key="team.number">
       <div
         class="row row-data items-center q-pb-sm"
         v-if="team.name && team.team"
       >
-        <template v-if="mainStore.isShowFontSetting">
-          <div class="col-3 relative-position q-mb-lg">
-            <FireFightingTextSizeBtn></FireFightingTextSizeBtn>
-          </div>
-          <div class="col-4 relative-position q-mb-lg">
-            <NameTextSizeBtn></NameTextSizeBtn>
-          </div>
-          <div class="col-3 relative-position q-mb-lg">
-            <CaseTextSizeBtn></CaseTextSizeBtn>
-          </div>
-          <div class="col-2 relative-position q-mb-lg">
-            <BackupTextSizeBtn></BackupTextSizeBtn>
-          </div>
-        </template>
         <div
           class="team col-3 text-weight-bolder"
           :style="`background-color: ${team.team.color};color: ${mainStore.teamNameColor};`"
@@ -135,7 +137,7 @@ const mainStore = useMainStore();
             top: 0;
             left: 50%;
             right: 0;
-            bottom: -5px;
+            bottom: -3px;
             transform: translateX(-50%);
             width: 80%;
             border-bottom: 2px solid $dark;
