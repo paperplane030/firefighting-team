@@ -19,7 +19,7 @@ mainStore.pageInit();
 
 <style lang="scss" scoped>
 .inner {
-  width: 1200px;
+  min-width: 1200px;
   max-width: 80vw;
   background-color: #fff;
   border-radius: 5px;
