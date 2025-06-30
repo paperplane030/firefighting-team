@@ -99,18 +99,7 @@
         <div
           class="column col-3 justify-center items-center q-gutter-sm case-list"
         >
-          <!-- <div class="row q-gutter-md">
-            <q-btn
-              v-for="caseItem in mainStore.caseList"
-              round
-              class="text-body2"
-              :label="caseItem"
-              size="sm"
-              @click="mainStore.selectCase(caseItem)"
-              color="teal-5"
-            >
-            </q-btn>
-          </div> -->
+        <div class="row justify-center q-gutter-sm">
           <q-btn
             class="text-body2"
             color="indigo-6"
@@ -119,6 +108,15 @@
             @click="mainStore.openCaseDialog(team.number)"
             >選擇case</q-btn
           >
+          <q-btn
+            class="text-body2"
+            color="indigo-6"
+            push
+            no-caps
+            @click="mainStore.openCustomCaseDialog()"
+            >自訂case</q-btn
+          >
+        </div>
           <div class="cases q-gutter-sm" v-if="team.case.length > 0">
             <q-avatar
               color="teal"
@@ -450,6 +448,59 @@
               mainStore.checkCaseBelongToTeam(caseItem).number
             }}</q-tooltip>
           </q-btn>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+  <q-dialog ref="caseDialog" v-model="mainStore.isShowCustomCaseDialog">
+    <q-card class="q-dialog-plugin">
+      <q-card-section class="q-pa-sm q-mb-md">
+        <div class="text-h6 text-center">
+          自訂case
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div class="row q-gutter-md">
+          <q-input
+            outlined
+            dense
+            type="text"
+            class="col"
+            v-model="mainStore.customCase"
+            label="輸入自訂case"
+            lazy-rules
+            hide-bottom-space
+          >
+            <template v-slot:append>
+              <q-icon
+                name="add"
+                class="cursor-pointer"
+                @click="
+                  mainStore.addCustomCase();
+                  mainStore.customCase = '';
+                "
+              />
+            </template>
+          </q-input>
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div class="full-width">
+          <q-list bordered separator v-if="mainStore.customCaseList.length > 0">
+            <q-item v-for="customCase in mainStore.customCaseList" v-ripple="false">
+              <q-item-section class="text-center text-body1">{{
+                customCase
+              }}</q-item-section>
+              <q-item-section avatar side>
+                <q-icon
+                  color="negative"
+                  name="delete"
+                  class="cursor-pointer"
+                  @click="mainStore.deleteCustomCaseOption(customCase)"
+                ></q-icon>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </div>
       </q-card-section>
     </q-card>

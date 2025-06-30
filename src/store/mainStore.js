@@ -14,6 +14,8 @@ export const useMainStore = defineStore('mainStore', {
     isShowNurseDialog: false,
     // 是否顯示案例
     isShowCaseDialog: false,
+    // 是否顯示自訂案例
+    isShowCustomCaseDialog: false,
     // 護理師名單
     nurseOptions: [],
     // 編組名單
@@ -23,13 +25,23 @@ export const useMainStore = defineStore('mainStore', {
     // 編組大名單
     teamList: teamList || [],
     // 選擇 case 中的組別
-    selectedTeam: '',
+    selectedTeam: {
+      number: '',
+      team: '',
+      name: '',
+      backup: '',
+      case: [],
+    },
     // case 名單
     caseList: caseList,
     // 已選擇的 case
     selectedCase: [],
     // 標記的 case
     markedCase: [],
+    // 新增的 case
+    customCase: '',
+    // 目前自訂的 case
+    customCaseList: [],
     // charting
     charting: '',
     // m8
@@ -69,6 +81,16 @@ export const useMainStore = defineStore('mainStore', {
       this.selectedCase = Cookies.get('selected_case', this.selectedCase) || [];
       // 標記的 case
       this.markedCase = Cookies.get('markedCase', this.markedCase) || [];
+      // 自訂的 case
+      this.customCaseList = Cookies.get('customCaseList') || [];
+      // 預設的 case 名單
+      this.caseList = Cookies.get('caseList') || caseList;
+      // 如果有自訂的 case 名單，就合併到預設的 case 名單，並排除重複
+      if (this.customCaseList.length > 0) {
+        this.caseList = [
+          ...new Set([...this.caseList, ...this.customCaseList]),
+        ];
+      }
       // 編組名單從儲存的拿，沒有的話就用預設的
       this.teamList = Cookies.get('teamList') || teamList;
       // 字體大小
@@ -153,6 +175,63 @@ export const useMainStore = defineStore('mainStore', {
       );
       this.isShowCaseDialog = true;
     },
+    openCustomCaseDialog() {
+      this.isShowCustomCaseDialog = true;
+    },
+    addCustomCase() {
+      if (!this.customCase) {
+        Notify.create({
+          message: '請輸入自訂案例',
+          color: 'negative',
+          position: 'top',
+          timeout: 3000,
+        });
+        return;
+      }
+      if (this.customCaseList.includes(this.customCase) || this.caseList.includes(this.customCase)) {
+        Notify.create({
+          message: '已有相同案例',
+          color: 'negative',
+          position: 'top',
+          timeout: 3000,
+        });
+        return;
+      }
+      this.customCaseList.push(this.customCase);
+      this.caseList.push(this.customCase);
+      this.customCase = '';
+      Cookies.set('customCaseList', this.customCaseList);
+      Cookies.set('caseList', this.caseList);
+      Notify.create({
+        message: '自訂案例已新增',
+        color: 'positive',
+        position: 'top',
+        timeout: 3000,
+      });
+    },
+    deleteCustomCaseOption(option) {
+      this.customCaseList = this.customCaseList.filter(
+        (item) => item !== option
+      );
+      this.selectedCase = this.selectedCase.filter((item) => item !== option);
+      this.caseList = this.caseList.filter((item) => item !== option);
+      // 更新 teamList 中的 case
+      this.teamList.forEach((team) => {
+        team.case = team.case.filter((item) => item !== option);
+      });
+      // 更新 Cookies
+      Cookies.set('selected_case', this.selectedCase);
+      Cookies.set('teamList', this.teamList);
+      Cookies.set('markedCase', this.markedCase);
+      Cookies.set('customCaseList', this.customCaseList);
+      Cookies.set('caseList', this.caseList);
+      Notify.create({
+        message: '自訂案例已刪除',
+        color: 'positive',
+        position: 'top',
+        timeout: 3000,
+      });
+    },
     selectCase(caseNumber) {
       if (!this.selectedCase.includes(caseNumber)) {
         console.log('沒有這個號碼');
@@ -182,8 +261,20 @@ export const useMainStore = defineStore('mainStore', {
     resetTeamList() {
       this.teamList = teamList;
       this.selectedCase = [];
+      this.customCaseList = [];
+      this.caseList = caseList;
+      this.markedCase = [];
       Cookies.set('teamList', this.teamList);
       Cookies.set('selected_case', this.selectedCase);
+      Cookies.set('customCaseList', this.customCaseList);
+      Cookies.set('caseList', this.caseList);
+      Cookies.set('markedCase', this.markedCase);
+      Notify.create({
+        message: '編組名單已重置',
+        color: 'positive',
+        position: 'top',
+        timeout: 3000,
+      });
     },
     checkCaseBelongToTeam(caseNumber) {
       return this.teamList.find((item) => item.case.includes(caseNumber));

@@ -41,4 +41,11 @@ export default [
     backup: '',
     case: [],
   },
+  {
+    number: '第七組',
+    team: '',
+    name: '',
+    backup: '',
+    case: [],
+  },
 ];
