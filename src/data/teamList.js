@@ -1,49 +1,70 @@
 export default [
   {
     number: '第一組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第二組',
-    team: '',
+    team: {
+      name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第三組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第四組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第五組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第六組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],
   },
   {
     number: '第七組',
-    team: '',
+    team: {
+        name: '',
+        color: '',
+      },
     name: '',
     backup: '',
     case: [],

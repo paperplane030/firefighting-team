@@ -27,7 +27,10 @@ export const useMainStore = defineStore('mainStore', {
     // 選擇 case 中的組別
     selectedTeam: {
       number: '',
-      team: '',
+      team: {
+        name: '',
+        color: '',
+      },
       name: '',
       backup: '',
       case: [],
@@ -39,7 +42,7 @@ export const useMainStore = defineStore('mainStore', {
     // 標記的 case
     markedCase: [],
     // 新增的 case
-    customCase: '',
+    customCase: null,
     // 目前自訂的 case
     customCaseList: [],
     // charting
@@ -188,7 +191,8 @@ export const useMainStore = defineStore('mainStore', {
         });
         return;
       }
-      if (this.customCaseList.includes(this.customCase) || this.caseList.includes(this.customCase)) {
+      const caseNumber = Number(this.customCase);
+      if (this.customCaseList.includes(caseNumber) || this.caseList.includes(caseNumber)) {
         Notify.create({
           message: '已有相同案例',
           color: 'negative',
@@ -197,9 +201,9 @@ export const useMainStore = defineStore('mainStore', {
         });
         return;
       }
-      this.customCaseList.push(this.customCase);
-      this.caseList.push(this.customCase);
-      this.customCase = '';
+      this.customCaseList.push(caseNumber);
+      this.caseList.push(caseNumber);
+      this.customCase = null;
       Cookies.set('customCaseList', this.customCaseList);
       Cookies.set('caseList', this.caseList);
       Notify.create({
@@ -257,6 +261,13 @@ export const useMainStore = defineStore('mainStore', {
       }
       // 排序
       this.selectedTeam.case.sort((a, b) => a - b);
+      // 從 markedCase 中移除已選擇的 case
+      this.markedCase = this.markedCase.filter(
+        (item) => item.caseNum !== caseNumber
+      );
+      // 更新 Cookies
+      Cookies.set('selected_case', this.selectedCase);
+      Cookies.set('teamList', this.teamList);
     },
     resetTeamList() {
       this.teamList = teamList;
@@ -292,10 +303,20 @@ export const useMainStore = defineStore('mainStore', {
       Cookies.set('displayCaseFontSize', this.displayCaseFontSize);
     },
     markCase(caseNum) {
-      if (this.markedCase.includes(caseNum)) {
-        this.markedCase = this.markedCase.filter((item) => item !== caseNum);
+      if (this.markedCase.some((item) => item.caseNum === caseNum)) {
+        const index = this.markedCase.findIndex(
+          (item) => item.caseNum === caseNum
+        );
+        if (this.markedCase[index].negative) {
+          this.markedCase.splice(index, 1);
+        }else{
+          this.markedCase[index].negative = true;
+        }
       } else {
-        this.markedCase.push(caseNum);
+        this.markedCase.push({
+          caseNum: caseNum,
+          negative: false,
+        });
       }
       Cookies.set('markedCase', this.markedCase);
     },

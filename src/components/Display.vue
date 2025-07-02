@@ -38,13 +38,13 @@
         >
           <template v-if="team.case.length > 0">
             <q-avatar
-              color="teal"
               text-color="white"
               size="xl"
               v-for="item in team.case"
               :key="item"
               class="cursor-pointer"
-              :class="mainStore.markedCase.includes(item) ? 'marked' : ''"
+              :class="[mainStore.markedCase.some(c => c.caseNum === item) ? 'marked' : '',
+                mainStore.markedCase.some(c => c.caseNum === item && c.negative) ? 'bg-negative' : 'bg-teal']"
               @click="mainStore.markCase(item)"
               >{{ item }}</q-avatar
             >

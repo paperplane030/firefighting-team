@@ -464,7 +464,7 @@
           <q-input
             outlined
             dense
-            type="text"
+            type="number"
             class="col"
             v-model="mainStore.customCase"
             label="輸入自訂case"
@@ -477,7 +477,7 @@
                 class="cursor-pointer"
                 @click="
                   mainStore.addCustomCase();
-                  mainStore.customCase = '';
+                  mainStore.customCase = null;
                 "
               />
             </template>
