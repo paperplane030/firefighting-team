@@ -20,4 +20,7 @@ export default defineConfig({
     }),
   ],
   base: './',
+  server: {
+    open: false, // 不自動開啟瀏覽器
+  },
 });

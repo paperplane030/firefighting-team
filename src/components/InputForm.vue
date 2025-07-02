@@ -464,12 +464,16 @@
           <q-input
             outlined
             dense
-            type="number"
+            type="text"
             class="col"
             v-model="mainStore.customCase"
             label="輸入自訂case"
             lazy-rules
             hide-bottom-space
+            @keyup.enter="
+              mainStore.addCustomCase();
+              mainStore.customCase = '';
+            "
           >
             <template v-slot:append>
               <q-icon
@@ -477,7 +481,7 @@
                 class="cursor-pointer"
                 @click="
                   mainStore.addCustomCase();
-                  mainStore.customCase = null;
+                  mainStore.customCase = '';
                 "
               />
             </template>

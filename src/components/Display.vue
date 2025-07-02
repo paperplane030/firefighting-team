@@ -43,7 +43,7 @@
               v-for="item in team.case"
               :key="item"
               class="cursor-pointer"
-              :class="[mainStore.markedCase.some(c => c.caseNum === item) ? 'marked' : '',
+              :class="[mainStore.markedCase.some(c => c.caseNum === item && !c.negative) ? 'marked' : '',
                 mainStore.markedCase.some(c => c.caseNum === item && c.negative) ? 'bg-negative' : 'bg-teal']"
               @click="mainStore.markCase(item)"
               >{{ item }}</q-avatar

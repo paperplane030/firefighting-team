@@ -42,7 +42,7 @@ export const useMainStore = defineStore('mainStore', {
     // 標記的 case
     markedCase: [],
     // 新增的 case
-    customCase: null,
+    customCase: '',
     // 目前自訂的 case
     customCaseList: [],
     // charting
@@ -191,8 +191,7 @@ export const useMainStore = defineStore('mainStore', {
         });
         return;
       }
-      const caseNumber = Number(this.customCase);
-      if (this.customCaseList.includes(caseNumber) || this.caseList.includes(caseNumber)) {
+      if (this.customCaseList.includes(this.customCase) || this.caseList.includes(this.customCase)) {
         Notify.create({
           message: '已有相同案例',
           color: 'negative',
@@ -201,8 +200,8 @@ export const useMainStore = defineStore('mainStore', {
         });
         return;
       }
-      this.customCaseList.push(caseNumber);
-      this.caseList.push(caseNumber);
+      this.customCaseList.push(this.customCase);
+      this.caseList.push(this.customCase);
       this.customCase = null;
       Cookies.set('customCaseList', this.customCaseList);
       Cookies.set('caseList', this.caseList);
@@ -231,7 +230,7 @@ export const useMainStore = defineStore('mainStore', {
       Cookies.set('caseList', this.caseList);
       Notify.create({
         message: '自訂案例已刪除',
-        color: 'positive',
+        color: 'negative',
         position: 'top',
         timeout: 3000,
       });
@@ -320,5 +319,6 @@ export const useMainStore = defineStore('mainStore', {
       }
       Cookies.set('markedCase', this.markedCase);
     },
+    
   },
 });
